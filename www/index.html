@@ -1,16 +1,11 @@
 <!DOCTYPE html>
-<html class="theme-dark">
+<html>
 <head>
-    <!--
-        Customize this policy to fit your own app's needs. For more guidance, see:
-            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
-        Some notes:
-            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
-            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
-            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-                * Enable inline JS: add 'unsafe-inline' to default-src
-        -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' * ws:;style-src 'self' 'unsafe-inline' data: blob:;media-src *;img-src * 'self' data: content:;script-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
+
+<!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *"> -->
+<meta http-equiv="Content-Security-Policy" content="default-src *;
+   img-src * 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' *;
+   style-src  'self' 'unsafe-inline' *">
     <!-- Required meta tags-->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
@@ -18,8 +13,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
+
     <!-- Your app title -->
-    <title>My App</title>
+    <title>ВезуЕду</title>
 
     <!-- This template defaults to the iOS CSS theme. To support both iOS and material design themes, see the Framework7 Tutorial at the link below:
         http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-themes-in-single-app.html
@@ -27,11 +23,104 @@
 
     <link rel="stylesheet" href="lib/framework7/css/framework7.ios.min.css">
     <link rel="stylesheet" href="lib/framework7/css/framework7.ios.colors.min.css">
-
     <link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="css/framework7-icons.css">
+	
+    <style type="text/css">
+.cross-control {
+	background: url(img/center.gif) no-repeat;
+	position: absolute;
+	width: 30px;
+	height: 44px;
+}
+#geoCoderAdres{
+    font-size: 20px;
+    font-weight: 700;
+}
+#close_map{
+position: absolute;
+    z-index: 10;
+    top: 10px;
+    left: 10px;}
+#onMapAdres{
+position:absolute;
+z-index: 10;
+margin:auto; 
+width:300px; 
+ left:50%; margin-left:-150px; 
+top:50px;
+font-size:30px;
+}#imHereBtn{
+position:absolute;
+z-index: 10;
+margin:auto; 
+width:300px; 
+ left:50%; margin-left:-150px; 
+bottom:50px;
+font-size:30px;
+}
+  .demo-card-header-pic .card-header {
+    height: 40vw;
+    background-size: cover;
+    background-position: center;
+  }
+.cafeName{
+    background: #393939;
+    padding: 10px;
+	font-weight: 900;
+right:30px;
+position:absolute;
+    border-radius: 15px 15px 0px 0px;
+
+}
+.cafeNameOpis{
+font-size:15px;
+margin:0px!important;
+text-align:center;
+color:white;
+}
+.cafeNameOpis span{
+font-size:10px;
+color:grey;
+}
+.foodBlock{
+padding:10px;
+margin-bottom:5px;
+background:#32333a;
+}
+.eda_img{
+border-radius:10px;}
+.foodPrice{
+    padding: 6px 12px;
+    position: relative;
+    left: 17px;
+    bottom: 13px;
+    background: green;
+    color: white;
+    border-radius: 10px;
+}
+.cart{
+width:100%;
+height:100%;
+text-align:center;
+padding-top:5px;}
+.dataCart{
+font-size:12px;
+background:rgba(6,91,0,1);
+border-radius:2px;
+}
+    </style>
+	
 </head>
 
-<body class="theme-dark color-theme-red">
+<body class="layout-dark theme-green"> 
+  <div class="popup tablet-fullscreen popup-map">
+<i class="f7-icons close-popup" id="close_map">close_round</i>
+<div id="onMapAdres">Укажите Ваш адрес</div>
+<a href="#" id="imHereBtn" class="button button-big button-round active close-popup">Я здесь</a>          
+
+<div id="karta" class="spisokMoekMap" style="width: 100%; height: 100%; padding: 0; margin: 0;"></div>
+  </div>
     <!-- Status bar overlay for full screen mode (PhoneGap) -->
     <div class="statusbar-overlay"></div>
 
@@ -39,52 +128,9 @@
     <div class="panel-overlay"></div>
     <!-- Left panel with reveal effect-->
     <div class="panel panel-left panel-reveal">
-        <div class="content-block" id="userArea">
-<div class="content-block-title">Just inputs</div>
-<div class="list-block">
-  <ul>
-    <li>
-      <div class="item-content">
-        <div class="item-inner">
-          <div class="item-input">
-            <input type="text" placeholder="Your name">
-          </div>
+        <div class="content-block">
+            <p>Left panel content goes here</p>
         </div>
-      </div>
-    </li>
-    <li>
-      <div class="item-content">
-        <div class="item-inner">
-          <div class="item-input">
-            <input type="email" placeholder="E-mail">
-          </div>
-        </div>
-      </div>
-    </li>
-    <li>
-      <div class="item-content">
-        <div class="item-inner">
-          <div class="item-input">
-            <select>
-              <option>Male</option>
-              <option>Female</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </li>
-    <li>
-      <div class="item-content">
-        <div class="item-inner">
-          <div class="item-input">
-            <input type="date" placeholder="Birth day" value="2014-04-30">
-          </div>
-        </div>
-      </div>
-    </li>
-  </ul>
-</div> 
-		</div>
     </div>
 
     <!-- Views -->
@@ -95,49 +141,75 @@
             <div class="navbar">
                 <div class="navbar-inner">
                     <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
-                    <div class="center sliding">CarWash Service</div>
+                    <div class="center sliding">ВезуЕду</div>
                     <div class="right">
                         <!--
                           Right link contains only icon - additional "icon-only" class
                           Additional "open-panel" class tells app to open panel when we click on this link
                         -->
-                        <a href="userArea.html" class="link icon-only"><i class="icon icon-bars"></i></a>
+                        <a href="#" class="link icon-only open-panel"><i class="icon icon-bars"></i></a>
                     </div>
                 </div>
             </div>
+<div class="toolbar" style="background: rgb(14,203,0);
+background: linear-gradient(90deg, rgba(14,203,0,1) 0%, rgba(48,136,0,1) 100%);">
+<div class="toolbar-inner" style="padding:5px;">
+<div class="row cart">
+    <!-- Each "cell" has col-[widht in percents] class -->
+    <div class="col-33 dataCart">~50м.</div>
+    <div class="col-33">Корзина</div>
+    <div class="col-33 dataCart">15000 тг.</div>
+</div>
+</div>
+</div> 
             <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
             <div class="pages navbar-through toolbar-through">
                 <!-- Page, "data-page" contains page name -->
                 <div data-page="index" class="page">
                     <!-- Scrollable page content -->
                     <div class="page-content">
-<a href="about.html"><img src="img/menu1.jpg" width="100%"></a>
-					<img src="img/menu2.jpg" width="100%">
-<a href="userArea.html"><img src="img/menu3.jpg" width="100%"></a>
-   
+					<!-- СЛАЙДЕР -->
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide"><img src="img/1561003098.jpeg" width="100%"></div>
+    </div>
+    <div class="swiper-pagination"></div>
+</div>
+<!-- #СЛАЙДЕР -->
+<!-- Карта -->
+
+  <a href="#"   data-popup=".popup-map"  class="button button-round  button-big active open-popup" id="geoCoderAdres" >Укажите адрес</a>
+
+<!-- #Карта -->
+<div class="list-block media-list" style="margin:0">
+
+	<div class="content-block-title">Открытые сейчас</div>
+  <div id="kafe_spisok_open"></div>
+  	<div class="content-block-title">Закрытые сейчас</div>
+  <ul id="kafe_spisok_close">
+  </ul>
+</div>
+                        <div class="content-block">
+
+                            <a href="about.html">About app</a>
+                        </div>
                     </div>
+					
+        
                 </div>
+
             </div>
             <!-- Bottom Toolbar-->
-            <div class="toolbar">
-                <div class="toolbar-inner">
-                    <!-- Toolbar links -->
-                    <a href="#" class="link">Link 1</a>
-                    <a href="#" class="link">Link 2</a>
-                </div>
-            </div>
         </div>
     </div>
-    <script type="text/javascript" src="cordova.js"></script>
+	    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=a635757a-1f14-4e89-be88-da9541950f16" type="text/javascript"></script>
+       <script type="text/javascript" src="js/cross-control.js"></script>
+	   <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="lib/framework7/js/framework7.min.js"></script>
-		<script
-  src="http://code.jquery.com/jquery-3.2.1.min.js"
-  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-  crossorigin="anonymous"></script>
-  
-  <script src="https://api-maps.yandex.ru/2.1/?lang=ru-RU" type="text/javascript"></script>
     <script type="text/javascript" src="js/my-app.js"></script>
-	
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+
+
 </body>
 
 </html>
